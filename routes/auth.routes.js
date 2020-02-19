@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const bcrypt = require('bcryptjs');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const router = Router();
@@ -8,9 +10,15 @@ const router = Router();
 
 const authValidator = [
   check('email', 'Email is incorrect').isEmail(),
+  check('email', 'Email field cannot be empty').isEmpty(),
   check('password', 'Password should not be empty').isEmpty(),
   check('password', 'Password length should be 6 characters or more')
     .isLength({ min: 6 })
+];
+
+const loginValidator = [
+  check('email', 'Email is incorrect').normalizeEmail().isEmpty(),
+  check('password', 'Password not exist').exists()
 ];
 
 async function registerHandler(req, res) {
@@ -51,22 +59,29 @@ async function loginHandler(req, res) {
       return res.status(400).json({
         errors: errors.array(),
         message: 'Incorrect login data'
-      })
+      });
     }
 
     const { email, password } = req.body;
-    const candidate = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-    if (candidate) {
-      return res.status(400).json({ message: `User ${email} already exist!` });
+    if (!user) {
+      return res.status(400).json({ message: `User ${email} not exist!` });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new User({ email, password: hashedPassword });
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
 
-    await user.save();
+    if (!isPasswordMatch) {
+      return res.status(400).json({ message: 'Wrong password, try again' });
+    }
 
-    res.status(201).json({ message: 'User has been successfully registered!' });
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      config.get('jwtSecret'),
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token, userId: user.id, email: user.email });
 
   } catch (e) {
     res.status(500).json({ message: 'Something went wrong' });
@@ -77,6 +92,6 @@ async function loginHandler(req, res) {
 router.post('/register', authValidator, registerHandler);
 
 // /api/auth/login
-router.post('/login', authValidator, loginHandler);
+router.post('/login', loginValidator, loginHandler);
 
 module.exports = router;
