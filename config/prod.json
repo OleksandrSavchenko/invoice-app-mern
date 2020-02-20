@@ -1,6 +1,6 @@
 {
-  "port": 5000,
+  "port": 80,
   "jwtSecret": "asdjfpduf8a9duf9asyf",
   "mongoURI": "mongodb+srv://sashko:qwerty1234@cluster0-qhlnp.mongodb.net/app?retryWrites=true&w=majority",
-  "baseURL": "http://localhost:5000"
+  "baseURL": "http://invoice.savapetproject.com"
 }
