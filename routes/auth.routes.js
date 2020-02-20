@@ -10,14 +10,12 @@ const router = Router();
 
 const authValidator = [
   check('email', 'Email is incorrect').isEmail(),
-  check('email', 'Email field cannot be empty').isEmpty(),
-  check('password', 'Password should not be empty').isEmpty(),
   check('password', 'Password length should be 6 characters or more')
     .isLength({ min: 6 })
 ];
 
 const loginValidator = [
-  check('email', 'Email is incorrect').normalizeEmail().isEmpty(),
+  check('email', 'Email is incorrect').normalizeEmail().isEmail(),
   check('password', 'Password not exist').exists()
 ];
 
@@ -44,7 +42,13 @@ async function registerHandler(req, res) {
 
     await user.save();
 
-    res.status(201).json({ message: 'User has been successfully registered!' });
+    res.status(201).json({
+      user: {
+        id: user.id,
+        email: user.email
+      },
+      message: 'User has been successfully registered!'
+    });
 
   } catch (e) {
     res.status(500).json({ message: 'Something went wrong' });
