@@ -30,7 +30,7 @@ async function start() {
       useCreateIndex: true
     });
 
-    app.listen(PORT, () => console.log(`App has been started on port ${PORT}`));
+    app.listen(PORT, '127.0.0.1', () => console.log(`App has been started on port ${PORT}`));
   } catch (e) {
     console.log('Server error', e.message);
     process.exit(1);
