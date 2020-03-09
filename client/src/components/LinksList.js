@@ -3,17 +3,17 @@ import {Link} from 'react-router-dom'
 
 export const LinksList = ({ links }) => {
   if (!links.length) {
-    return <p className="center">Ссылок пока нет</p>
+    return <p className="center">There is no links yet.</p>
   }
 
   return (
     <table>
       <thead>
       <tr>
-        <th>№</th>
-        <th>Оригинальная</th>
-        <th>Сокращенная</th>
-        <th>Открыть</th>
+        <th>#</th>
+        <th>Original</th>
+        <th>Shorted</th>
+        <th>Action</th>
       </tr>
       </thead>
 
@@ -25,7 +25,7 @@ export const LinksList = ({ links }) => {
             <td>{link.from}</td>
             <td>{link.to}</td>
             <td>
-              <Link to={`/detail/${link._id}`}>Открыть</Link>
+              <Link to={`/detail/${link._id}`}>Open</Link>
             </td>
           </tr>
         )
