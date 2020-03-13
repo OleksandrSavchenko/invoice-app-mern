@@ -12,7 +12,7 @@ export const LinksList = ({ links }) => {
       <tr>
         <th>#</th>
         <th>Original</th>
-        <th>Shorted</th>
+        <th>Short</th>
         <th>Action</th>
       </tr>
       </thead>
