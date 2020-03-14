@@ -11,6 +11,7 @@ app.use(express.json({ extended: true }));
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/link', require('./routes/link.routes'));
 app.use('/t', require('./routes/redirect.routes'));
+app.use('/api/test', require('./routes/test.routes'));
 
 // if (process.env.NODE_ENV === 'production') {
 //   app.use('/', express.static(path.join(__dirname, 'client', 'build')));
@@ -21,7 +22,6 @@ app.use('/t', require('./routes/redirect.routes'));
 // }
 
 const PORT = argv.port || config.get('port') || 5000;
-console.log(argv);
 
 
 async function start() {
