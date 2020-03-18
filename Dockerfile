@@ -1,18 +1,15 @@
+FROM node:12
 
-FROM node:10-alpine
-
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-
-WORKDIR /home/node/app
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-USER node
-
 RUN npm install
 
-COPY --chown=node:node . .
+COPY . .
 
-EXPOSE 8080
+ENV PORT 8000
 
-CMD [ "node", "app.js" ]
+EXPOSE ${PORT}
+
+CMD ["npm", "run", "start"]
